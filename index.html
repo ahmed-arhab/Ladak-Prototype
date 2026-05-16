@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ladak Adventures</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="#home">Ladak Adventures</a>
+      <nav class="main-nav">
+        <a href="#destinations">Destinations</a>
+        <a href="#packages">Packages</a>
+        <a href="#itinerary">Itinerary</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="top-actions">
+        <button class="toggle-btn" id="themeToggle">Dark Mode</button>
+        <button class="button primary" id="openLogin">Login / Sign Up</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span class="eyebrow">Immersive Mountain Escapes</span>
+          <h1>Discover purple skies, coral sunsets, and unforgettable journeys.</h1>
+          <p>Travel beyond ordinary, explore Ladakh, Kashmir, Sikkim, Kerala and more with curated adventure packages, flexible booking, and traveler-approved experiences.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#packages">Browse Packages</a>
+            <a class="button ghost" href="#reviews">See Reviews</a>
+          </div>
+        </div>
+        <div class="hero-badges">
+          <div class="badge">5 New Destinations</div>
+          <div class="badge">Flexible travel planning</div>
+          <div class="badge">Secure booking demo</div>
+        </div>
+        <div class="animated-glow"></div>
+        <div class="animated-dots"></div>
+      </section>
+
+      <section class="section intro-grid" id="destinations">
+        <div>
+          <h2>Popular destinations</h2>
+          <p>Choose your next adventure from luxury Himalayan escapes to tropical South India backwaters, all built for active travelers who want beauty, culture, and comfort.</p>
+        </div>
+        <div class="feature-cards">
+          <article class="feature-card purple">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="Kashmir lake" />
+            <div>
+              <h3>Kashmir</h3>
+              <p>Shikara rides, alpine meadows, and the bold flavors of North India.</p>
+            </div>
+          </article>
+          <article class="feature-card coral">
+            <img src="https://images.unsplash.com/photo-1534278931820-2d725f64c246?auto=format&fit=crop&w=900&q=80" alt="Sikkim landscape" />
+            <div>
+              <h3>Sikkim</h3>
+              <p>High-altitude lakes, vibrant monasteries, and mountain trekking routes.</p>
+            </div>
+          </article>
+          <article class="feature-card violet">
+            <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80" alt="Kerala backwaters" />
+            <div>
+              <h3>Kerala</h3>
+              <p>Serene backwaters, houseboat stays, and spice-laced coastal cuisine.</p>
+            </div>
+          </article>
+          <article class="feature-card teal">
+            <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=900&q=80" alt="Ladakh mountains" />
+            <div>
+              <h3>Ladakh</h3>
+              <p>Wide-open skies, high-altitude lakes, and desert landscapes.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section package-area" id="packages">
+        <div class="section-header">
+          <span class="eyebrow">Featured journeys</span>
+          <h2>Packages built for every pace and budget</h2>
+          <p>Filter by price and duration to match your travel energy—with detailed packages for every destination.</p>
+        </div>
+        <div class="filters">
+          <label>Price range
+            <select id="priceFilter">
+              <option value="all">All</option>
+              <option value="budget">Budget</option>
+              <option value="standard">Standard</option>
+              <option value="premium">Premium</option>
+            </select>
+          </label>
+          <label>Duration
+            <select id="durationFilter">
+              <option value="all">All</option>
+              <option value="3-5">3-5 Days</option>
+              <option value="6-8">6-8 Days</option>
+              <option value="9+">9+ Days</option>
+            </select>
+          </label>
+          <label>Destination
+            <select id="destinationFilter">
+              <option value="all">Any</option>
+            </select>
+          </label>
+        </div>
+        <div class="package-grid" id="packageGrid"></div>
+      </section>
+
+      <section class="section itinerary" id="itinerary">
+        <div class="section-header">
+          <span class="eyebrow">Daily adventures</span>
+          <h2>Day-by-day itineraries</h2>
+          <p>Open a package to explore the full itinerary and visualize how every day unfolds.</p>
+        </div>
+        <div id="itineraryContent" class="itinerary-cards"></div>
+      </section>
+
+      <section class="section reviews" id="reviews">
+        <div class="section-header">
+          <span class="eyebrow">Traveler stories</span>
+          <h2>Reviews from recent explorers</h2>
+          <p>Real ratings and feedback help you choose the right trip with confidence.</p>
+        </div>
+        <div class="review-grid" id="reviewGrid"></div>
+      </section>
+
+      <section class="section blog" id="blog">
+        <div class="section-header">
+          <span class="eyebrow">Travel know-how</span>
+          <h2>Blog & travel tips</h2>
+          <p>Practical guides, packing tips, and destination inspiration to help every journey feel effortless.</p>
+        </div>
+        <div class="blog-grid" id="blogGrid"></div>
+      </section>
+
+      <section class="section faq" id="faq">
+        <div class="section-header">
+          <span class="eyebrow">Visa & permits</span>
+          <h2>FAQ for seamless planning</h2>
+          <p>Answers to visa, permit, and booking questions so you can travel with clarity.</p>
+        </div>
+        <div class="faq-list" id="faqList"></div>
+      </section>
+
+      <section class="section payment" id="payment">
+        <div class="payment-panel">
+          <h2>Secure booking demo</h2>
+          <p>Try the payment gateway flow with a quick demo checkout experience.</p>
+          <form id="paymentForm" class="payment-form">
+            <div class="field-row">
+              <label>Name</label>
+              <input id="payerName" type="text" placeholder="Traveler name" required />
+            </div>
+            <div class="field-row">
+              <label>Email</label>
+              <input id="payerEmail" type="email" placeholder="name@example.com" required />
+            </div>
+            <div class="field-row">
+              <label>Promo code</label>
+              <input id="promoInput" type="text" placeholder="Enter code" />
+            </div>
+            <div class="field-row">
+              <label>Payment amount</label>
+              <div class="amount-display">₹ <span id="paymentAmount">24,999</span></div>
+            </div>
+            <div class="field-row">
+              <label>Card details</label>
+              <div class="card-mockup">
+                <span>4242 4242 4242 4242</span>
+                <span>Exp 12/34 • CVC 123</span>
+              </div>
+            </div>
+            <button class="button primary" type="submit">Pay with Stripe</button>
+            <p class="payment-help">Using demo card data only. This is a static frontend integration designed for preview.</p>
+          </form>
+          <div class="receipt hidden" id="receiptCard"></div>
+        </div>
+      </section>
+
+      <section class="section referral" id="referral">
+        <div class="section-header">
+          <span class="eyebrow">Referral program</span>
+          <h2>Share travel, earn rewards</h2>
+          <p>Invite friends to join and unlock discounts toward your next adventure.</p>
+        </div>
+        <div class="referral-cards">
+          <div class="referral-card">
+            <h3>Refer a friend</h3>
+            <p>Get 10% off when your friend books their first package.</p>
+          </div>
+          <div class="referral-card">
+            <h3>Early bird perks</h3>
+            <p>Use your referral code to receive priority support and a surprise welcome gift.</p>
+          </div>
+          <div class="referral-card">
+            <h3>Travel credit</h3>
+            <p>Collect credits on every successful booking and redeem them on your next trip.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="section-header">
+          <span class="eyebrow">Stay connected</span>
+          <h2>Ready to start your journey?</h2>
+          <p>Login, manage bookings, or create an account to personalize your travel plan.</p>
+          <button class="button primary" id="openLoginAlt">Login / Sign Up</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 Ladak Adventures. Designed for immersive travel planning.</p>
+    </footer>
+  </div>
+
+  <div class="modal hidden" id="authModal">
+    <div class="modal-card">
+      <button class="modal-close" id="closeAuth">×</button>
+      <div class="auth-tabs">
+        <button class="tab-button active" data-tab="login">Login</button>
+        <button class="tab-button" data-tab="signup">Sign Up</button>
+      </div>
+      <div class="auth-frames">
+        <form id="loginForm" class="auth-form active">
+          <h3>Login</h3>
+          <label>Email <input type="email" id="loginEmail" required /></label>
+          <label>Password <input type="password" id="loginPassword" required /></label>
+          <button class="button primary" type="submit">Login</button>
+          <p class="small-text">Demo admin: admin@ladaktravel.com / admin123</p>
+        </form>
+        <form id="signupForm" class="auth-form">
+          <h3>Sign Up</h3>
+          <label>Name <input type="text" id="signupName" required /></label>
+          <label>Email <input type="email" id="signupEmail" required /></label>
+          <label>Password <input type="password" id="signupPassword" required /></label>
+          <button class="button primary" type="submit">Create account</button>
+        </form>
+      </div>
+      <div class="auth-status hidden" id="authStatus"></div>
+    </div>
+  </div>
+
+  <section class="admin-shell hidden" id="adminDashboard">
+    <div class="admin-panel">
+      <div class="admin-header">
+        <h2>Admin Dashboard</h2>
+        <button class="button ghost" id="adminLogout">Logout</button>
+      </div>
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h3>Recent Bookings</h3>
+          <div id="adminBookings"></div>
+        </div>
+        <div class="admin-card">
+          <h3>Promo codes</h3>
+          <div id="promoList"></div>
+          <form id="promoForm" class="promo-form">
+            <input id="promoCode" type="text" placeholder="Code" required />
+            <input id="promoDiscount" type="number" min="5" max="50" placeholder="Discount %" required />
+            <button class="button primary" type="submit">Create promo</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
