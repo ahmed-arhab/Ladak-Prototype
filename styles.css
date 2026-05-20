@@ -13,9 +13,9 @@
 body {
   margin: 0;
   font-family: Inter, system-ui, sans-serif;
-  background: radial-gradient(circle at top left, rgba(178, 119, 255, 0.18), transparent 28%),
-              radial-gradient(circle at 20% 20%, rgba(255, 128, 128, 0.15), transparent 22%),
-              linear-gradient(180deg, #140b31 0%, #0b0620 45%, #110c27 100%);
+  background: radial-gradient(circle at top left, rgba(150, 193, 233, 0.18), transparent 28%),
+              radial-gradient(circle at 20% 20%, rgba(54, 124, 133, 0.15), transparent 22%),
+              linear-gradient(180deg, #0f6d8c 0%, #5c9bc2 45%, #288ba9 100%);
   color: var(--text);
 }
 
@@ -27,7 +27,7 @@ body.dark-mode {
   --muted: #beb4d7;
   background: radial-gradient(circle at top left, rgba(135, 45, 211, 0.16), transparent 26%),
               radial-gradient(circle at 80% 18%, rgba(255, 94, 150, 0.12), transparent 20%),
-              linear-gradient(180deg, #07020d 0%, #07020d 45%, #0a0518 100%);
+              linear-gradient(180deg, #07020d 0%, #07020d 45%, #051218 100%);
 }
 
 * {
@@ -70,7 +70,7 @@ button {
   font-weight: 800;
   letter-spacing: -0.04em;
   font-size: 1.35rem;
-  background: linear-gradient(135deg, #e7b0ff, #ffb9c2);
+  background: linear-gradient(135deg, #0820d3, #ffffff);
   -webkit-background-clip: text;
   color: transparent;
 }
@@ -108,7 +108,7 @@ button {
 }
 
 .primary {
-  background: linear-gradient(135deg, var(--accent-strong), var(--accent));
+  background: linear-gradient(135deg, rgb(66, 154, 226), white);
   color: #1a0521;
 }
 
@@ -139,8 +139,7 @@ button {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: url('https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
-  opacity: 0.18;
+  background: url('https://images.timesnownews.com/thumb/msid-152496330,width-1280,height-720,resizemode-75/152496330.jpg') center/cover no-repeat;
   filter: saturate(1.2) brightness(0.55);
 }
 
