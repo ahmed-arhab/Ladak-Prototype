@@ -50,7 +50,7 @@ const destinations = [
       'Cultural immersion in local villages and cuisine.',
       'Leisure day with optional trekking and spa.'
     ],
-    image: 'https://images.unsplash.com/photo-1534278931820-2d725f64c246?auto=format&fit=crop&w=900&q=80'
+    image: 'https://www.northeast-india.in/wp-content/uploads/IMG_20250325_121127949.800-1.jpg'
   },
   {
     title: 'Kerala Backwater Escape',
