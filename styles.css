@@ -37,6 +37,15 @@ body.dark-mode {
 img {
   max-width: 100%;
   display: block;
+  border-radius: 16px;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+  filter: brightness(1.08);
 }
 
 a {
@@ -304,6 +313,9 @@ button {
 .feature-card img {
   height: 210px;
   object-fit: cover;
+  object-position: center;
+  border-radius: 20px;
+  width: 100%;
 }
 
 .feature-card div {
@@ -366,6 +378,14 @@ button {
   gap: 18px;
 }
 
+.package-card img {
+  height: 220px;
+  width: 100%;
+  border-radius: 22px;
+  object-fit: cover;
+  object-position: center;
+}
+
 .package-card h3,
 .review-card h3,
 .blog-card h3,
@@ -423,10 +443,12 @@ button {
 }
 
 .blog-card img {
-  border-radius: 18px;
+  border-radius: 20px;
   margin-bottom: 16px;
   height: 180px;
+  width: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .faq-card {
