@@ -199,7 +199,7 @@ function renderPackages() {
       <div class="package-meta">${pkg.destination} • ${pkg.duration} days • ${pkg.level}</div>
       <h3>${pkg.title}</h3>
       <p>${pkg.description}</p>
-      <div class="package-meta">₹ ${formatPrice(pkg.price)} per person</div>
+      <div class="package-meta">LKR ${formatPrice(pkg.price)} per person</div>
       <button class="button primary" data-package="${pkg.title}">View itinerary</button>
     </article>
   `).join('');
@@ -220,7 +220,7 @@ function renderItinerary(pkg) {
   html.itineraryContent.innerHTML = `
     <article class="package-card">
       <h3>${pkg.title}</h3>
-      <div class="package-meta">${pkg.destination} • ${pkg.duration} Days • ₹ ${formatPrice(pkg.price)}</div>
+      <div class="package-meta">${pkg.destination} • ${pkg.duration} Days • LKR ${formatPrice(pkg.price)}</div>
       <p>${pkg.description}</p>
     </article>
   ` + pkg.itinerary.map((day, index) => `
@@ -421,7 +421,7 @@ function handlePayment(event) {
   if (promo) {
     const discount = Math.round(amount * promo.discount / 100);
     amount -= discount;
-    discountText = `${promo.discount}% promo applied. You saved ₹${formatPrice(discount)}.`;
+    discountText = `${promo.discount}% promo applied. You saved LKR${formatPrice(discount)}.`;
   }
   html.paymentAmount.textContent = formatPrice(amount);
   const booking = {
@@ -450,7 +450,7 @@ function showReceipt(booking, discountText) {
     <p><strong>Name:</strong> ${booking.name}</p>
     <p><strong>Email:</strong> ${booking.email}</p>
     <p><strong>Package:</strong> ${booking.package}</p>
-    <p><strong>Total paid:</strong> ₹ ${formatPrice(booking.amount)}</p>
+    <p><strong>Total paid:</strong> LKR ${formatPrice(booking.amount)}</p>
     <p><strong>Promo:</strong> ${booking.promo}</p>
     <p>${discountText}</p>
     <p>Thank you for booking with Ladak Adventures. A confirmation email has been queued for delivery.</p>
