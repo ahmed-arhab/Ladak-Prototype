@@ -126,6 +126,52 @@ const promoCodes = [
   { code: 'CORAL15', discount: 15 }
 ];
 
+const cardTypes = [
+  {
+    id: 'visa',
+    label: 'VISA',
+    requirement: '16-digit card number, 3-digit CVC, and OTP verification.'
+  },
+  {
+    id: 'amex',
+    label: 'AMEX',
+    requirement: '15-digit card number, 4-digit CID/CVC, and 3D Secure confirmation.'
+  },
+  {
+    id: 'credit',
+    label: 'CREDIT',
+    requirement: 'Bank-issued credit card with online payments and international usage enabled when needed.'
+  }
+];
+
+const paymentBanks = [
+  {
+    id: 'hnb',
+    label: 'HNB',
+    requirement: 'Hatton National Bank cards require SMS OTP and enabled e-commerce transactions.'
+  },
+  {
+    id: 'boc',
+    label: 'BOC',
+    requirement: 'Bank of Ceylon cards require 3D Secure enrollment and an active mobile number.'
+  },
+  {
+    id: 'sampath',
+    label: 'SAMPATH',
+    requirement: 'Sampath cards require Sampath Vishwa/OTP verification for online payments.'
+  },
+  {
+    id: 'peoples',
+    label: "PEOPLE'S",
+    requirement: "People's Bank cards require SMS OTP and sufficient daily online transaction limit."
+  },
+  {
+    id: 'amana',
+    label: 'AMANA BANK',
+    requirement: 'Amana Bank cards require OTP verification and online card usage activation.'
+  }
+];
+
 const adminCredentials = { email: 'admin@ladaktravel.com', password: 'admin123' };
 
 const html = {
@@ -160,6 +206,14 @@ const html = {
   payerName: document.getElementById('payerName'),
   payerEmail: document.getElementById('payerEmail'),
   promoInput: document.getElementById('promoInput'),
+  cardType: document.getElementById('cardType'),
+  bankName: document.getElementById('bankName'),
+  cardNumber: document.getElementById('cardNumber'),
+  cardExpiry: document.getElementById('cardExpiry'),
+  cardCvc: document.getElementById('cardCvc'),
+  cardBrandPreview: document.getElementById('cardBrandPreview'),
+  bankPreview: document.getElementById('bankPreview'),
+  paymentRequirements: document.getElementById('paymentRequirements'),
   paymentAmount: document.getElementById('paymentAmount'),
   receiptCard: document.getElementById('receiptCard'),
   adminLogout: document.getElementById('adminLogout')
@@ -263,6 +317,39 @@ function renderFaq() {
       card.classList.toggle('open');
     });
   });
+}
+
+function getSelectedCardType() {
+  return cardTypes.find(card => card.id === html.cardType.value) || cardTypes[0];
+}
+
+function getSelectedBank() {
+  return paymentBanks.find(bank => bank.id === html.bankName.value) || paymentBanks[0];
+}
+
+function renderPaymentOptions() {
+  html.cardType.innerHTML = cardTypes.map(card => `
+    <option value="${card.id}">${card.label}</option>
+  `).join('');
+  html.bankName.innerHTML = paymentBanks.map(bank => `
+    <option value="${bank.id}">${bank.label}</option>
+  `).join('');
+  updatePaymentRequirements();
+}
+
+function updatePaymentRequirements() {
+  const card = getSelectedCardType();
+  const bank = getSelectedBank();
+  html.cardBrandPreview.textContent = card.label;
+  html.bankPreview.textContent = bank.label;
+  html.paymentRequirements.innerHTML = `
+    <li>${card.requirement}</li>
+    <li>${bank.requirement}</li>
+    <li>Cardholder name must match a valid traveler or booking contact.</li>
+  `;
+  html.cardNumber.maxLength = card.id === 'amex' ? 17 : 19;
+  html.cardCvc.maxLength = card.id === 'amex' ? 4 : 3;
+  html.cardCvc.placeholder = card.id === 'amex' ? '1234' : '123';
 }
 
 function setTheme(theme) {
@@ -380,6 +467,7 @@ function renderAdminData() {
           <strong>${booking.name}</strong>
           <p>${booking.package}</p>
           <small>${booking.email}</small>
+          ${booking.paymentMethod ? `<small>${booking.paymentMethod} • ${booking.bank}</small>` : ''}
         </div>
       `).join('')
     : '<p>No bookings yet.</p>';
@@ -408,11 +496,54 @@ function findPromo(code) {
   return promoCodes.find(promo => promo.code === code.trim().toUpperCase());
 }
 
+function cleanDigits(value) {
+  return value.replace(/\D/g, '');
+}
+
+function formatCardNumberInput(event) {
+  const card = getSelectedCardType();
+  const digits = cleanDigits(event.target.value).slice(0, card.id === 'amex' ? 15 : 16);
+  const groups = card.id === 'amex'
+    ? [digits.slice(0, 4), digits.slice(4, 10), digits.slice(10, 15)]
+    : digits.match(/.{1,4}/g) || [];
+  event.target.value = groups.filter(Boolean).join(' ');
+}
+
+function formatExpiryInput(event) {
+  const digits = cleanDigits(event.target.value).slice(0, 4);
+  event.target.value = digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+}
+
+function formatCvcInput(event) {
+  const card = getSelectedCardType();
+  event.target.value = cleanDigits(event.target.value).slice(0, card.id === 'amex' ? 4 : 3);
+}
+
+function isValidPaymentDetails(card, cardNumber, cvc, expiry) {
+  const cardLength = card.id === 'amex' ? 15 : 16;
+  const cvcLength = card.id === 'amex' ? 4 : 3;
+  const expiryMatch = expiry.match(/^(0[1-9]|1[0-2])\/?(\d{2})$/);
+  return cardNumber.length === cardLength && cvc.length === cvcLength && Boolean(expiryMatch);
+}
+
 function handlePayment(event) {
   event.preventDefault();
   const name = html.payerName.value.trim();
   const email = html.payerEmail.value.trim();
+  const card = getSelectedCardType();
+  const bank = getSelectedBank();
+  const cardNumber = cleanDigits(html.cardNumber.value);
+  const cvc = cleanDigits(html.cardCvc.value);
+  const expiry = html.cardExpiry.value.trim();
   if (!name || !email) {
+    return;
+  }
+  if (!isValidPaymentDetails(card, cardNumber, cvc, expiry)) {
+    html.receiptCard.classList.remove('hidden');
+    html.receiptCard.innerHTML = `
+      <h3>Payment details need attention</h3>
+      <p>Please check the ${card.label} card number, expiry date, and CVC requirements before paying.</p>
+    `;
     return;
   }
   const promo = findPromo(html.promoInput.value);
@@ -431,6 +562,10 @@ function handlePayment(event) {
     package: destinations[0].title,
     amount,
     promo: promo ? promo.code : 'None',
+    paymentMethod: card.label,
+    bank: bank.label,
+    cardLast4: cardNumber.slice(-4),
+    requirements: [card.requirement, bank.requirement],
     date: new Date().toLocaleDateString()
   };
   const bookings = JSON.parse(localStorage.getItem('ladakBookings') || '[]');
@@ -450,8 +585,13 @@ function showReceipt(booking, discountText) {
     <p><strong>Name:</strong> ${booking.name}</p>
     <p><strong>Email:</strong> ${booking.email}</p>
     <p><strong>Package:</strong> ${booking.package}</p>
+    <p><strong>Payment method:</strong> ${booking.paymentMethod} ending ${booking.cardLast4}</p>
+    <p><strong>Issuing bank:</strong> ${booking.bank}</p>
     <p><strong>Total paid:</strong> LKR ${formatPrice(booking.amount)}</p>
     <p><strong>Promo:</strong> ${booking.promo}</p>
+    <ul class="requirement-list">
+      ${booking.requirements.map(requirement => `<li>${requirement}</li>`).join('')}
+    </ul>
     <p>${discountText}</p>
     <p>Thank you for booking with Ladak Adventures. A confirmation email has been queued for delivery.</p>
   `;
@@ -477,6 +617,15 @@ html.signupForm.addEventListener('submit', handleSignup);
 html.promoForm.addEventListener('submit', handlePromoCreate);
 html.paymentForm.addEventListener('submit', handlePayment);
 html.adminLogout.addEventListener('click', handleAdminLogout);
+html.cardType.addEventListener('change', () => {
+  html.cardNumber.value = '';
+  html.cardCvc.value = '';
+  updatePaymentRequirements();
+});
+html.bankName.addEventListener('change', updatePaymentRequirements);
+html.cardNumber.addEventListener('input', formatCardNumberInput);
+html.cardExpiry.addEventListener('input', formatExpiryInput);
+html.cardCvc.addEventListener('input', formatCvcInput);
 
 document.querySelectorAll('.tab-button').forEach(button => {
   button.addEventListener('click', () => switchAuthTab(button.dataset.tab));
@@ -490,6 +639,7 @@ window.addEventListener('click', (event) => {
 
 window.addEventListener('load', () => {
   loadTheme();
+  renderPaymentOptions();
   renderPackages();
   renderReviews();
   renderBlog();

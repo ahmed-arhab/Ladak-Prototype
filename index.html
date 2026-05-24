@@ -168,18 +168,45 @@
               <label>Promo code</label>
               <input id="promoInput" type="text" placeholder="Enter code" />
             </div>
+            <div class="payment-grid">
+              <div class="field-row">
+                <label>Card type</label>
+                <select id="cardType" required></select>
+              </div>
+              <div class="field-row">
+                <label>Issuing bank</label>
+                <select id="bankName" required></select>
+              </div>
+            </div>
+            <div class="payment-grid">
+              <div class="field-row">
+                <label>Card number</label>
+                <input id="cardNumber" type="text" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242" required />
+              </div>
+              <div class="field-row">
+                <label>Expiry</label>
+                <input id="cardExpiry" type="text" inputmode="numeric" maxlength="5" placeholder="MM/YY" required />
+              </div>
+              <div class="field-row">
+                <label>CVC</label>
+                <input id="cardCvc" type="text" inputmode="numeric" maxlength="4" placeholder="123" required />
+              </div>
+            </div>
             <div class="field-row">
               <label>Payment amount</label>
               <div class="amount-display">LKR <span id="paymentAmount">24,999</span></div>
             </div>
             <div class="field-row">
-              <label>Card details</label>
+              <label>Payment requirements</label>
               <div class="card-mockup">
-                <span>4242 4242 4242 4242</span>
-                <span>Exp 12/34 • CVC 123</span>
+                <div class="card-line">
+                  <span id="cardBrandPreview">VISA</span>
+                  <span id="bankPreview">HNB</span>
+                </div>
+                <ul id="paymentRequirements" class="requirement-list"></ul>
               </div>
             </div>
-            <button class="button primary" type="submit">Pay with Stripe</button>
+            <button class="button primary" type="submit">Pay Securely</button>
             <p class="payment-help">Using demo card data only. This is a static frontend integration designed for preview.</p>
           </form>
           <div class="receipt hidden" id="receiptCard"></div>
