@@ -216,7 +216,24 @@ const html = {
   paymentRequirements: document.getElementById('paymentRequirements'),
   paymentAmount: document.getElementById('paymentAmount'),
   receiptCard: document.getElementById('receiptCard'),
-  adminLogout: document.getElementById('adminLogout')
+  adminLogout: document.getElementById('adminLogout'),
+  signupPhone: document.getElementById('signupPhone'),
+  signupOtpInput: document.getElementById('signupOtpInput'),
+  signupOtpSection: document.getElementById('signupOtpSection'),
+  sendSignupOtp: document.getElementById('sendSignupOtp'),
+  verifySignupOtp: document.getElementById('verifySignupOtp'),
+  resendSignupOtp: document.getElementById('resendSignupOtp'),
+  loginPhone: document.getElementById('loginPhone'),
+  loginOtpInput: document.getElementById('loginOtpInput'),
+  loginOtpSection: document.getElementById('loginOtpSection'),
+  sendLoginOtp: document.getElementById('sendLoginOtp'),
+  verifyLoginOtp: document.getElementById('verifyLoginOtp'),
+  resendLoginOtp: document.getElementById('resendLoginOtp')
+};
+
+const authState = {
+  pendingSignup: null,
+  pendingLogin: null
 };
 
 function formatPrice(amount) {
@@ -374,6 +391,8 @@ function openAuth() {
 
 function closeAuth() {
   html.authModal.classList.add('hidden');
+  clearSignupOtpState();
+  clearLoginOtpState();
 }
 
 function switchAuthTab(tab) {
@@ -384,6 +403,8 @@ function switchAuthTab(tab) {
     form.classList.toggle('active', form.id === `${tab}Form`);
   });
   html.authStatus.classList.add('hidden');
+  clearSignupOtpState();
+  clearLoginOtpState();
 }
 
 function getUsers() {
@@ -402,6 +423,56 @@ function setCurrentUser(user) {
   localStorage.setItem('ladakCurrentUser', JSON.stringify(user));
 }
 
+function getSelectedOtpMethod(formPrefix) {
+  return document.querySelector(`input[name="${formPrefix}OtpMethod"]:checked`)?.value || 'email';
+}
+
+async function sendOtpRequest(payload) {
+  const response = await fetch('/api/send-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'Unable to send OTP.');
+  }
+  return data;
+}
+
+async function verifyOtpRequest(sessionId, code) {
+  const response = await fetch('/api/verify-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId, code })
+  });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || 'OTP verification failed.');
+  }
+  return data;
+}
+
+function showSignupOtpSection(show) {
+  html.signupOtpSection.classList.toggle('hidden', !show);
+}
+
+function showLoginOtpSection(show) {
+  html.loginOtpSection.classList.toggle('hidden', !show);
+}
+
+function clearSignupOtpState() {
+  authState.pendingSignup = null;
+  html.signupOtpInput.value = '';
+  showSignupOtpSection(false);
+}
+
+function clearLoginOtpState() {
+  authState.pendingLogin = null;
+  html.loginOtpInput.value = '';
+  showLoginOtpSection(false);
+}
+
 function showAuthStatus(message, successful = true) {
   html.authStatus.textContent = message;
   html.authStatus.classList.remove('hidden');
@@ -410,37 +481,163 @@ function showAuthStatus(message, successful = true) {
 
 function handleLogin(event) {
   event.preventDefault();
-  const email = html.loginEmail.value.trim();
-  const password = html.loginPassword.value.trim();
-  const users = getUsers();
-  const account = users.find(user => user.email === email && user.password === password);
-  if (account || (email === adminCredentials.email && password === adminCredentials.password)) {
-    const user = account || { name: 'Admin', email };
-    setCurrentUser({ ...user, role: email === adminCredentials.email ? 'admin' : 'traveler' });
-    showAuthStatus('Login successful. Redirecting...', true);
-    updateUserInterface();
-    setTimeout(closeAuth, 900);
+  if (html.loginOtpSection.classList.contains('hidden')) {
+    sendLoginOtp();
   } else {
-    showAuthStatus('Invalid login credentials. Please try again.', false);
+    verifyLoginOtp();
   }
 }
 
 function handleSignup(event) {
   event.preventDefault();
+  if (html.signupOtpSection.classList.contains('hidden')) {
+    sendSignupOtp();
+  } else {
+    verifySignupOtp();
+  }
+}
+
+async function sendSignupOtp() {
   const name = html.signupName.value.trim();
   const email = html.signupEmail.value.trim();
   const password = html.signupPassword.value.trim();
+  const phone = html.signupPhone.value.trim();
   const users = getUsers();
+  if (!name || !email || !password || !phone) {
+    showAuthStatus('Please complete all signup fields before requesting an OTP.', false);
+    return;
+  }
   if (users.some(user => user.email === email) || email === adminCredentials.email) {
     showAuthStatus('An account with this email already exists.', false);
     return;
   }
-  users.push({ name, email, password, role: 'traveler' });
-  setUsers(users);
-  setCurrentUser({ name, email, role: 'traveler' });
-  showAuthStatus('Account created successfully! You are logged in.', true);
-  updateUserInterface();
-  setTimeout(closeAuth, 900);
+  const normalizedPhone = cleanDigits(phone);
+  if (normalizedPhone.length < 7) {
+    showAuthStatus('Please enter a valid phone number to receive the OTP.', false);
+    return;
+  }
+  try {
+    const { sessionId, message } = await sendOtpRequest({
+      type: 'signup',
+      name,
+      email,
+      phone: normalizedPhone,
+      method: getSelectedOtpMethod('signup')
+    });
+    authState.pendingSignup = {
+      name,
+      email,
+      password,
+      phone: normalizedPhone,
+      method: getSelectedOtpMethod('signup'),
+      sessionId
+    };
+    showSignupOtpSection(true);
+    showAuthStatus(message, true);
+  } catch (error) {
+    showAuthStatus(error.message, false);
+  }
+}
+
+async function verifySignupOtp() {
+  const session = authState.pendingSignup;
+  const entered = html.signupOtpInput.value.trim();
+  if (!session || !session.sessionId) {
+    showAuthStatus('Please request an OTP first.', false);
+    return;
+  }
+  if (!entered) {
+    showAuthStatus('Enter the OTP code you received to verify your account.', false);
+    return;
+  }
+  try {
+    await verifyOtpRequest(session.sessionId, entered);
+    const users = getUsers();
+    users.push({ name: session.name, email: session.email, password: session.password, phone: session.phone, role: 'traveler' });
+    setUsers(users);
+    setCurrentUser({ name: session.name, email: session.email, phone: session.phone, role: 'traveler' });
+    clearSignupOtpState();
+    showAuthStatus('Account created and verified successfully. You are logged in.', true);
+    updateUserInterface();
+    setTimeout(closeAuth, 900);
+  } catch (error) {
+    showAuthStatus(error.message, false);
+  }
+}
+
+async function sendLoginOtp() {
+  const email = html.loginEmail.value.trim();
+  const password = html.loginPassword.value.trim();
+  const phone = html.loginPhone.value.trim();
+  const users = getUsers();
+  if (!email || !password || !phone) {
+    showAuthStatus('Please complete email, password, and phone before requesting OTP.', false);
+    return;
+  }
+  if (email === adminCredentials.email && password === adminCredentials.password) {
+    setCurrentUser({ name: 'Admin', email, role: 'admin' });
+    showAuthStatus('Admin login successful. Redirecting...', true);
+    updateUserInterface();
+    setTimeout(closeAuth, 900);
+    return;
+  }
+  const account = users.find(user => user.email === email && user.password === password);
+  const normalizedPhone = cleanDigits(phone);
+  if (!account) {
+    showAuthStatus('Invalid login credentials. Please try again.', false);
+    return;
+  }
+  if (account.phone !== normalizedPhone) {
+    showAuthStatus('Phone number does not match the registered account.', false);
+    return;
+  }
+  try {
+    const { sessionId, message } = await sendOtpRequest({
+      type: 'login',
+      email,
+      phone: normalizedPhone,
+      method: getSelectedOtpMethod('login')
+    });
+    authState.pendingLogin = {
+      email,
+      phone: normalizedPhone,
+      method: getSelectedOtpMethod('login'),
+      sessionId
+    };
+    showLoginOtpSection(true);
+    showAuthStatus(message, true);
+  } catch (error) {
+    showAuthStatus(error.message, false);
+  }
+}
+
+async function verifyLoginOtp() {
+  const session = authState.pendingLogin;
+  const entered = html.loginOtpInput.value.trim();
+  if (!session || !session.sessionId) {
+    showAuthStatus('Please request an OTP before verification.', false);
+    return;
+  }
+  if (!entered) {
+    showAuthStatus('Enter the OTP code you received to complete login.', false);
+    return;
+  }
+  try {
+    await verifyOtpRequest(session.sessionId, entered);
+    const users = getUsers();
+    const account = users.find(user => user.email === session.email);
+    if (!account) {
+      showAuthStatus('Unable to complete login. Account was not found.', false);
+      return;
+    }
+    setCurrentUser({ name: account.name, email: account.email, phone: account.phone, role: 'traveler' });
+    clearLoginOtpState();
+    showAuthStatus('Login verified successfully. Redirecting...', true);
+    updateUserInterface();
+    setTimeout(closeAuth, 900);
+  } catch (error) {
+    showAuthStatus(error.message, false);
+  }
 }
 
 function updateUserInterface() {
@@ -614,6 +811,12 @@ html.openLoginAlt.addEventListener('click', openAuth);
 html.closeAuth.addEventListener('click', closeAuth);
 html.loginForm.addEventListener('submit', handleLogin);
 html.signupForm.addEventListener('submit', handleSignup);
+html.sendSignupOtp.addEventListener('click', sendSignupOtp);
+html.verifySignupOtp.addEventListener('click', verifySignupOtp);
+html.resendSignupOtp.addEventListener('click', sendSignupOtp);
+html.sendLoginOtp.addEventListener('click', sendLoginOtp);
+html.verifyLoginOtp.addEventListener('click', verifyLoginOtp);
+html.resendLoginOtp.addEventListener('click', sendLoginOtp);
 html.promoForm.addEventListener('submit', handlePromoCreate);
 html.paymentForm.addEventListener('submit', handlePayment);
 html.adminLogout.addEventListener('click', handleAdminLogout);

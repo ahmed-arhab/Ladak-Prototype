@@ -667,6 +667,44 @@ button {
   padding: 14px 16px;
 }
 
+.mfa-method {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 18px;
+  color: var(--muted);
+}
+
+.mfa-method span {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.mfa-method label {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.button.secondary {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: var(--text);
+}
+
+.small-text {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-top: 10px;
+}
+
 .auth-status {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.14);
