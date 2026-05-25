@@ -261,16 +261,43 @@
         <form id="loginForm" class="auth-form active">
           <h3>Login</h3>
           <label>Email <input type="email" id="loginEmail" required /></label>
+          <label>Phone number <input type="tel" id="loginPhone" placeholder="+94 77 123 4567" required /></label>
           <label>Password <input type="password" id="loginPassword" required /></label>
-          <button class="button primary" type="submit">Login</button>
-          <p class="small-text">Demo admin: admin@ladaktravel.com / admin123</p>
+          <div class="mfa-method">
+            <span>Send OTP to:</span>
+            <label><input type="radio" name="loginOtpMethod" value="email" checked /> Email</label>
+            <label><input type="radio" name="loginOtpMethod" value="phone" /> Phone</label>
+          </div>
+          <button class="button secondary" type="button" id="sendLoginOtp">Send OTP</button>
+          <div id="loginOtpSection" class="hidden">
+            <label>Enter OTP <input type="text" id="loginOtpInput" maxlength="6" placeholder="123456" /></label>
+            <div class="auth-actions">
+              <button class="button primary" type="button" id="verifyLoginOtp">Verify OTP</button>
+              <button class="button ghost" type="button" id="resendLoginOtp">Resend code</button>
+            </div>
+          </div>
+          <p class="small-text">You must verify login with an OTP sent to your chosen email or phone number.</p>
         </form>
         <form id="signupForm" class="auth-form">
           <h3>Sign Up</h3>
           <label>Name <input type="text" id="signupName" required /></label>
           <label>Email <input type="email" id="signupEmail" required /></label>
+          <label>Phone number <input type="tel" id="signupPhone" placeholder="+94 77 123 4567" required /></label>
           <label>Password <input type="password" id="signupPassword" required /></label>
-          <button class="button primary" type="submit">Create account</button>
+          <div class="mfa-method">
+            <span>Send OTP to:</span>
+            <label><input type="radio" name="signupOtpMethod" value="email" checked /> Email</label>
+            <label><input type="radio" name="signupOtpMethod" value="phone" /> Phone</label>
+          </div>
+          <button class="button secondary" type="button" id="sendSignupOtp">Send OTP</button>
+          <div id="signupOtpSection" class="hidden">
+            <label>Enter OTP <input type="text" id="signupOtpInput" maxlength="6" placeholder="123456" /></label>
+            <div class="auth-actions">
+              <button class="button primary" type="button" id="verifySignupOtp">Verify OTP</button>
+              <button class="button ghost" type="button" id="resendSignupOtp">Resend code</button>
+            </div>
+          </div>
+          <p class="small-text">A new OTP is generated every time you send or resend the code.</p>
         </form>
       </div>
       <div class="auth-status hidden" id="authStatus"></div>
