@@ -799,50 +799,6 @@ function handleAdminLogout() {
   updateUserInterface();
 }
 
-// Contact buttons: open link and copy contact to clipboard, show toast
-function showToast(message, ms = 2800) {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = message;
-  t.classList.remove('hidden');
-  clearTimeout(t._hid);
-  t._hid = setTimeout(() => t.classList.add('hidden'), ms);
-}
-
-function initContactButtons() {
-  document.querySelectorAll('.contact-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const type = btn.dataset.type;
-      const value = btn.dataset.value;
-      try {
-        if (type === 'email') {
-          navigator.clipboard?.writeText(value).catch(() => {});
-          window.open(`mailto:${value}`, '_blank');
-          showToast('Email address copied. Opening mail client...');
-        } else if (type === 'whatsapp') {
-          const phone = value.replace(/\s+/g, '').replace(/[^+0-9]/g, '');
-          navigator.clipboard?.writeText(phone).catch(() => {});
-          // use wa.me format without plus
-          const noPlus = phone.replace(/^\+/, '');
-          window.open(`https://wa.me/${noPlus}?text=${encodeURIComponent('Hi, I would like more info about your packages.')}`, '_blank');
-          showToast('WhatsApp number copied. Opening WhatsApp...');
-        } else if (type === 'instagram' || type === 'facebook') {
-          navigator.clipboard?.writeText(value).catch(() => {});
-          window.open(value, '_blank');
-          showToast('Link copied to clipboard. Opening social profile...');
-        }
-      } catch (err) {
-        console.error('contact action failed', err);
-        showToast('Unable to open contact. You can copy the contact manually.');
-      }
-    });
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  initContactButtons();
-});
-
 html.priceFilter.addEventListener('change', renderPackages);
 html.durationFilter.addEventListener('change', renderPackages);
 html.destinationFilter.addEventListener('change', renderPackages);
