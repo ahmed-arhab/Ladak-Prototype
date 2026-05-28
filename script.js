@@ -824,7 +824,7 @@ function initContactButtons() {
           navigator.clipboard?.writeText(phone).catch(() => {});
           // use wa.me format without plus
           const noPlus = phone.replace(/^\+/, '');
-          window.open(`https://wa.me/${noPlus}?text=${encodeURIComponent('Hi, I would like more info about your packages.')}`, '_blank');
+          window.open(`https://wa.me/${noPlus}?text=${encodeURIComponent('Can I get more details about?')}`, '_blank');
           showToast('WhatsApp number copied. Opening WhatsApp...');
         } else if (type === 'instagram' || type === 'facebook') {
           navigator.clipboard?.writeText(value).catch(() => {});
