@@ -211,6 +211,22 @@ button {
   color: #f3e9ff;
 }
 
+.hero-features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  margin: 32px auto 0;
+  padding: 0 24px;
+  max-width: 1300px;
+}
+
+.hero-features article {
+  flex: 1 1 calc((100% - 72px) / 4);
+  max-width: calc((100% - 72px) / 4);
+  min-width: 220px;
+}
+
 .animated-glow,
 .animated-dots {
   position: absolute;
