@@ -376,6 +376,49 @@ button {
   padding: 14px 16px;
 }
 
+.ride-booking .ride-grid {
+  display: grid;
+  gap: 18px;
+  max-width: 920px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+}
+
+.ride-booking .field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ride-booking label {
+  font-size: 0.96rem;
+  color: var(--text);
+}
+
+.ride-booking select,
+.ride-booking input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 14px 16px;
+  border-radius: 16px;
+}
+
+.ride-booking .permit-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.ride-booking .total-display {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+}
+
 .package-grid,
 .review-grid,
 .blog-grid,
