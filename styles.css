@@ -610,9 +610,93 @@ button {
 }
 
 .footer {
-  padding: 20px 0 12px;
+  padding: 40px 0 20px;
   text-align: center;
   color: var(--muted);
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-top: 1px solid var(--border);
+}
+
+.footer-contact {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-contact h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text);
+}
+
+.footer-contact p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.contact-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.contact-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.contact-icon:hover {
+  transform: translateY(-4px);
+  background: var(--surface-strong);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.contact-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.contact-icon.whatsapp:hover {
+  background: rgba(34, 177, 76, 0.2);
+  color: #22b14c;
+  border-color: #22b14c;
+}
+
+.contact-icon.facebook:hover {
+  background: rgba(59, 89, 152, 0.2);
+  color: #3b5998;
+  border-color: #3b5998;
+}
+
+.contact-icon.instagram:hover {
+  background: rgba(225, 48, 108, 0.2);
+  color: #e1306c;
+  border-color: #e1306c;
+}
+
+.contact-icon.mail:hover {
+  background: rgba(255, 128, 128, 0.2);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.footer-content {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
 }
 
 .modal {
