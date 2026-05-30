@@ -99,6 +99,36 @@
         <div class="package-grid" id="packageGrid"></div>
       </section>
 
+      <section class="section ride-booking" id="rideBooking">
+        <div class="section-header">
+          <span class="eyebrow">Bike ride services</span>
+          <h2>Choose your ride location and bike variant</h2>
+          <p>Book bike services across India for tourists with SL-approved driving licences and local riding permits. Select a destination first, then pick your favourite bike.</p>
+        </div>
+        <div class="ride-grid">
+          <div class="field-row">
+            <label for="rideLocation">Ride location</label>
+            <select id="rideLocation" required>
+              <option value="">Select destination</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label for="bikeVariant">Bike variant</label>
+            <select id="bikeVariant" required>
+              <option value="">Select bike</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <label>Permit details</label>
+            <p class="permit-note">Available for tourists with SL-approved driving licence. Local riding permit support is included with every bike booking.</p>
+          </div>
+          <div class="field-row">
+            <label>Total ride payment</label>
+            <div class="amount-display total-display">LKR <span id="rideTotal">0</span></div>
+          </div>
+        </div>
+      </section>
+
       <section class="section itinerary" id="itinerary">
         <div class="section-header">
           <span class="eyebrow">Daily adventures</span>

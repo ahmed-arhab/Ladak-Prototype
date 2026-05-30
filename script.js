@@ -172,6 +172,22 @@ const paymentBanks = [
   }
 ];
 
+const rideLocations = [
+  { id: 'ladakh', label: 'Ladakh & Leh', price: 24999 },
+  { id: 'kashmir', label: 'Kashmir Valley', price: 22999 },
+  { id: 'sikkim', label: 'Sikkim Hills', price: 27999 },
+  { id: 'kerala', label: 'Kerala Coast', price: 21999 }
+];
+
+const bikeVariants = [
+  { id: 'royal-enfield-classic', label: 'Royal Enfield Classic', extra: 0 },
+  { id: 'avenger', label: 'Avenger', extra: 950 },
+  { id: 'r15', label: 'R15', extra: 1450 },
+  { id: 'mt15', label: 'MT15', extra: 1350 },
+  { id: 'fz', label: 'FZ', extra: 1150 },
+  { id: 'other', label: 'Other suitable variant', extra: 1200 }
+];
+
 const adminCredentials = { email: 'admin@ladaktravel.com', password: 'admin123' };
 
 const html = {
@@ -215,6 +231,9 @@ const html = {
   bankPreview: document.getElementById('bankPreview'),
   paymentRequirements: document.getElementById('paymentRequirements'),
   paymentAmount: document.getElementById('paymentAmount'),
+  rideLocation: document.getElementById('rideLocation'),
+  bikeVariant: document.getElementById('bikeVariant'),
+  rideTotal: document.getElementById('rideTotal'),
   receiptCard: document.getElementById('receiptCard'),
   adminLogout: document.getElementById('adminLogout'),
   signupPhone: document.getElementById('signupPhone'),
@@ -334,6 +353,41 @@ function renderFaq() {
       card.classList.toggle('open');
     });
   });
+}
+
+function getSelectedRideLocation() {
+  return rideLocations.find(location => location.id === html.rideLocation.value) || null;
+}
+
+function getSelectedBikeVariant() {
+  return bikeVariants.find(bike => bike.id === html.bikeVariant.value) || null;
+}
+
+function calculateRideTotal() {
+  const location = getSelectedRideLocation();
+  const bike = getSelectedBikeVariant();
+  if (!location) {
+    return 0;
+  }
+  return location.price + (bike ? bike.extra : 0);
+}
+
+function renderRideBookingOptions() {
+  html.rideLocation.innerHTML = `
+    <option value="">Select destination</option>
+    ${rideLocations.map(location => `<option value="${location.id}">${location.label}</option>`).join('')}
+  `;
+  html.bikeVariant.innerHTML = `
+    <option value="">Select bike</option>
+    ${bikeVariants.map(bike => `<option value="${bike.id}">${bike.label}</option>`).join('')}
+  `;
+  updateRideTotal();
+}
+
+function updateRideTotal() {
+  const total = calculateRideTotal();
+  html.rideTotal.textContent = formatPrice(total);
+  html.paymentAmount.textContent = formatPrice(total || 24999);
 }
 
 function getSelectedCardType() {
@@ -744,8 +798,11 @@ function handlePayment(event) {
     return;
   }
   const promo = findPromo(html.promoInput.value);
-  let amount = 24999;
+  let amount = calculateRideTotal() || 24999;
   let discountText = 'No discount applied.';
+  if (!calculateRideTotal()) {
+    amount = 24999;
+  }
   if (promo) {
     const discount = Math.round(amount * promo.discount / 100);
     amount -= discount;
@@ -756,7 +813,8 @@ function handlePayment(event) {
     id: `BK${Date.now()}`,
     name,
     email,
-    package: destinations[0].title,
+    package: getSelectedRideLocation()?.label || destinations[0].title,
+    bike: getSelectedBikeVariant()?.label || 'Standard service',
     amount,
     promo: promo ? promo.code : 'None',
     paymentMethod: card.label,
@@ -782,6 +840,7 @@ function showReceipt(booking, discountText) {
     <p><strong>Name:</strong> ${booking.name}</p>
     <p><strong>Email:</strong> ${booking.email}</p>
     <p><strong>Package:</strong> ${booking.package}</p>
+    <p><strong>Bike selected:</strong> ${booking.bike}</p>
     <p><strong>Payment method:</strong> ${booking.paymentMethod} ending ${booking.cardLast4}</p>
     <p><strong>Issuing bank:</strong> ${booking.bank}</p>
     <p><strong>Total paid:</strong> LKR ${formatPrice(booking.amount)}</p>
@@ -826,6 +885,8 @@ html.cardType.addEventListener('change', () => {
   updatePaymentRequirements();
 });
 html.bankName.addEventListener('change', updatePaymentRequirements);
+html.rideLocation.addEventListener('change', updateRideTotal);
+html.bikeVariant.addEventListener('change', updateRideTotal);
 html.cardNumber.addEventListener('input', formatCardNumberInput);
 html.cardExpiry.addEventListener('input', formatExpiryInput);
 html.cardCvc.addEventListener('input', formatCvcInput);
@@ -843,6 +904,7 @@ window.addEventListener('click', (event) => {
 window.addEventListener('load', () => {
   loadTheme();
   renderPaymentOptions();
+  renderRideBookingOptions();
   renderPackages();
   renderReviews();
   renderBlog();
