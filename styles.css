@@ -384,6 +384,52 @@ button {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 24px;
+  grid-template-columns: 1fr 360px;
+  align-items: start;
+}
+
+.ride-booking .ride-form {
+  display: grid;
+  gap: 18px;
+}
+
+.bike-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.bike-preview-inner {
+  width: 100%;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.bike-preview img {
+  width: 100%;
+  height: 220px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.bike-caption {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .ride-booking .ride-grid {
+    grid-template-columns: 1fr;
+  }
+  .bike-preview img {
+    height: 180px;
+  }
 }
 
 .ride-booking .field-row {

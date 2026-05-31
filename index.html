@@ -106,26 +106,34 @@
           <p>Book bike services across India for tourists with SL-approved driving licences and local riding permits. Select a destination first, then pick your favourite bike.</p>
         </div>
         <div class="ride-grid">
-          <div class="field-row">
-            <label for="rideLocation">Ride location</label>
-            <select id="rideLocation" required>
-              <option value="">Select destination</option>
-            </select>
+          <div class="ride-form">
+            <div class="field-row">
+              <label for="rideLocation">Ride location</label>
+              <select id="rideLocation" required>
+                <option value="">Select destination</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <label for="bikeVariant">Bike variant</label>
+              <select id="bikeVariant" required>
+                <option value="">Select bike</option>
+              </select>
+            </div>
+            <div class="field-row">
+              <label>Permit details</label>
+              <p class="permit-note">Available for tourists with SL-approved driving licence. Local riding permit support is included with every bike booking.</p>
+            </div>
+            <div class="field-row">
+              <label>Total ride payment</label>
+              <div class="amount-display total-display">LKR <span id="rideTotal">0</span></div>
+            </div>
           </div>
-          <div class="field-row">
-            <label for="bikeVariant">Bike variant</label>
-            <select id="bikeVariant" required>
-              <option value="">Select bike</option>
-            </select>
-          </div>
-          <div class="field-row">
-            <label>Permit details</label>
-            <p class="permit-note">Available for tourists with SL-approved driving licence. Local riding permit support is included with every bike booking.</p>
-          </div>
-          <div class="field-row">
-            <label>Total ride payment</label>
-            <div class="amount-display total-display">LKR <span id="rideTotal">0</span></div>
-          </div>
+          <aside class="bike-preview" aria-hidden="false">
+            <div class="bike-preview-inner">
+              <img id="bikeImage" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80" alt="Selected bike" />
+              <div class="bike-caption">Select a bike to preview</div>
+            </div>
+          </aside>
         </div>
       </section>
 
