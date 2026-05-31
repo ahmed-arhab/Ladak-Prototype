@@ -180,12 +180,12 @@ const rideLocations = [
 ];
 
 const bikeVariants = [
-  { id: 'royal-enfield-classic', label: 'Royal Enfield Classic', extra: 0 },
-  { id: 'avenger', label: 'Avenger', extra: 950 },
-  { id: 'r15', label: 'R15', extra: 1450 },
-  { id: 'mt15', label: 'MT15', extra: 1350 },
-  { id: 'fz', label: 'FZ', extra: 1150 },
-  { id: 'other', label: 'Other suitable variant', extra: 1200 }
+  { id: 'royal-enfield-classic', label: 'Royal Enfield Classic', extra: 0, image: 'https://www.royalenfield.com/us/en/motorcycles/classic-350/' },
+  { id: 'avenger', label: 'Avenger', extra: 950, image: 'https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?auto=format&fit=crop&w=900&q=80' },
+  { id: 'r15', label: 'R15', extra: 1450, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80' },
+  { id: 'mt15', label: 'MT15', extra: 1350, image: 'https://images.unsplash.com/photo-1518173946683-0b39f2be9c2c?auto=format&fit=crop&w=900&q=80' },
+  { id: 'fz', label: 'FZ', extra: 1150, image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=80' },
+  { id: 'other', label: 'Other suitable variant', extra: 1200, image: 'https://images.unsplash.com/photo-1511438026091-2f4b9b5c8b1e?auto=format&fit=crop&w=900&q=80' }
 ];
 
 const adminCredentials = { email: 'admin@ladaktravel.com', password: 'admin123' };
@@ -233,6 +233,7 @@ const html = {
   paymentAmount: document.getElementById('paymentAmount'),
   rideLocation: document.getElementById('rideLocation'),
   bikeVariant: document.getElementById('bikeVariant'),
+  bikeImage: document.getElementById('bikeImage'),
   rideTotal: document.getElementById('rideTotal'),
   receiptCard: document.getElementById('receiptCard'),
   adminLogout: document.getElementById('adminLogout'),
@@ -388,6 +389,22 @@ function updateRideTotal() {
   const total = calculateRideTotal();
   html.rideTotal.textContent = formatPrice(total);
   html.paymentAmount.textContent = formatPrice(total || 24999);
+}
+
+function updateBikeImage() {
+  const bike = getSelectedBikeVariant();
+  const img = html.bikeImage;
+  const caption = document.querySelector('.bike-caption');
+  if (!img) return;
+  if (bike && bike.image) {
+    img.src = bike.image;
+    if (caption) caption.textContent = bike.label;
+    img.alt = bike.label;
+  } else {
+    img.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80';
+    if (caption) caption.textContent = 'Select a bike to preview';
+    img.alt = 'Selected bike';
+  }
 }
 
 function getSelectedCardType() {
@@ -885,8 +902,14 @@ html.cardType.addEventListener('change', () => {
   updatePaymentRequirements();
 });
 html.bankName.addEventListener('change', updatePaymentRequirements);
-html.rideLocation.addEventListener('change', updateRideTotal);
-html.bikeVariant.addEventListener('change', updateRideTotal);
+html.rideLocation.addEventListener('change', () => {
+  updateRideTotal();
+  updateBikeImage();
+});
+html.bikeVariant.addEventListener('change', () => {
+  updateRideTotal();
+  updateBikeImage();
+});
 html.cardNumber.addEventListener('input', formatCardNumberInput);
 html.cardExpiry.addEventListener('input', formatExpiryInput);
 html.cardCvc.addEventListener('input', formatCvcInput);
@@ -911,4 +934,5 @@ window.addEventListener('load', () => {
   renderFaq();
   updateUserInterface();
   renderItinerary(destinations[0]);
+  updateBikeImage();
 });
