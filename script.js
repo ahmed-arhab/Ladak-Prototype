@@ -180,12 +180,11 @@ const rideLocations = [
 ];
 
 const bikeVariants = [
-  { id: 'royal-enfield-classic', label: 'Royal Enfield Classic', extra: 0, image: 'https://www.royalenfield.com/us/en/motorcycles/classic-350/' },
-  { id: 'avenger', label: 'Avenger', extra: 950, image: 'https://images.unsplash.com/photo-1523986371872-9d3ba2e2f642?auto=format&fit=crop&w=900&q=80' },
-  { id: 'r15', label: 'R15', extra: 1450, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80' },
-  { id: 'mt15', label: 'MT15', extra: 1350, image: 'https://images.unsplash.com/photo-1518173946683-0b39f2be9c2c?auto=format&fit=crop&w=900&q=80' },
-  { id: 'fz', label: 'FZ', extra: 1150, image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=900&q=80' },
-  { id: 'other', label: 'Other suitable variant', extra: 1200, image: 'https://images.unsplash.com/photo-1511438026091-2f4b9b5c8b1e?auto=format&fit=crop&w=900&q=80' }
+  { id: 'royal-enfield-classic', label: 'Royal Enfield Classic', extra: 0, image: 'https://preview.redd.it/ill-draw-your-motorcycle-v0-ao9cubcyqkje1.pnghttps://preview.redd.it/ill-draw-your-motorcycle-v0-ao9cubcyqkje1.png?width=640&crop=smart&auto=webp&s=d04e128b580ea02af41bb18a39e727b5f7bfa6bd' },
+  { id: 'avenger', label: 'Avenger', extra: 950, image: 'https://images.hindustantimes.com/auto/img/2023/05/06/600x338/Bajaj_Avenger_Atom_1_1683370504066_1683371607329.jpg' },
+  { id: 'r15', label: 'R15', extra: 1450, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlKD5PYMkxbCXrAjJX6N-r4RoxFwbJ5BfnJg&s' },
+  { id: 'mt15', label: 'MT15', extra: 1350, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIccLxjHkreQAWxY70EQOzBr2RrorL8N6FDw&s' },
+  { id: 'fz', label: 'FZ', extra: 1150, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb5hBYuGYptTrhoCrv7LdpIi_ekj6CPVCxKg&s' }
 ];
 
 const adminCredentials = { email: 'admin@ladaktravel.com', password: 'admin123' };
@@ -401,7 +400,7 @@ function updateBikeImage() {
     if (caption) caption.textContent = bike.label;
     img.alt = bike.label;
   } else {
-    img.src = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80';
+    img.src = 'https://preview.redd.it/ill-draw-your-motorcycle-v0-ao9cubcyqkje1.png?width=640&crop=smart&auto=webp&s=d04e128b580ea02af41bb18a39e727b5f7bfa6bd';
     if (caption) caption.textContent = 'Select a bike to preview';
     img.alt = 'Selected bike';
   }
