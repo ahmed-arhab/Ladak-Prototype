@@ -442,10 +442,12 @@ function updatePaymentRequirements() {
 function setTheme(theme) {
   if (theme === 'dark') {
     document.body.classList.add('dark-mode');
-    html.themeToggle.textContent = 'Light Mode';
+    html.themeToggle.setAttribute('aria-pressed', 'true');
+    html.themeToggle.setAttribute('aria-label', 'Switch to light mode');
   } else {
     document.body.classList.remove('dark-mode');
-    html.themeToggle.textContent = 'Dark Mode';
+    html.themeToggle.setAttribute('aria-pressed', 'false');
+    html.themeToggle.setAttribute('aria-label', 'Switch to dark mode');
   }
   localStorage.setItem('ladakTheme', theme);
 }
