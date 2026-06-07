@@ -3,6 +3,7 @@
   --surface: rgba(255, 255, 255, 0.08);
   --surface-strong: rgba(255, 255, 255, 0.14);
   --text: #f5f0ff;
+  --text-hero: var(--text);
   --muted: #d3cbd9;
   --accent: #ff8080;
   --accent-strong: #b277ff;
@@ -29,6 +30,20 @@ body.dark-mode {
   background: radial-gradient(circle at top left, rgba(135, 45, 211, 0.16), transparent 26%),
               radial-gradient(circle at 80% 18%, rgba(255, 94, 150, 0.12), transparent 20%),
               linear-gradient(180deg, #07020d 0%, #07020d 45%, #051218 100%);
+}
+
+/* Light mode overrides: darker text for most content, but keep hero text light */
+.light-mode {
+  --bg: #ffffff;
+  --surface: rgba(0,0,0,0.04);
+  --surface-strong: rgba(0,0,0,0.06);
+  --text: #1a0521;
+  --muted: #4b4b4b;
+  --accent: #ff6f6f;
+  --accent-strong: #8b5cf6;
+  --border: rgba(0,0,0,0.12);
+  --text-hero: #f5f0ff;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
 * {
@@ -107,31 +122,40 @@ button {
 }
 
 .button {
-  border: 1px solid transparent;
-  padding: 14px 20px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
   border-radius: 999px;
   transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .button:hover {
   transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
 
 .primary {
-  background: linear-gradient(135deg, rgb(66, 154, 226), white);
-  color: #1a0521;
+  background: transparent;
+  color: var(--accent-strong);
+  border-color: var(--accent-strong);
 }
 
 .ghost {
-  background: rgba(255,255,255,0.08);
+  background: transparent;
   color: var(--text);
+  border-color: var(--border);
 }
 
 .toggle-btn {
-  background: rgba(255,255,255,0.08);
+  background: transparent;
   color: var(--text);
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid var(--border);
   padding: 12px 16px;
 }
 
@@ -144,6 +168,11 @@ button {
   border-radius: 40px;
   padding: 68px 32px 52px;
   background: linear-gradient(135deg, rgba(120, 59, 211, 0.32), rgba(255, 96, 142, 0.18));
+}
+
+/* Ensure hero text stays light regardless of body theme */
+.hero, .hero h1, .hero p, .hero .eyebrow, .hero .badge {
+  color: var(--text-hero);
 }
 
 .hero-overlay {
